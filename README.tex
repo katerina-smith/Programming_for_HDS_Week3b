@@ -1,0 +1,85 @@
+# Automated Analysis Pipeline Exploration - Cervical Cancer Risk Factors
+
+## Purpose of the Notebook
+
+This notebook runs and extends the instructor's automated analysis pipeline on my final
+project dataset, the UCI Cervical Cancer (Risk Factors) dataset. The pipeline loads the
+data, checks and prepares it, explores it, runs inferential statistics, and trains and
+evaluates supervised machine learning models. It uses conditional logic to adapt to the
+file type, missing values, and user-defined settings.
+
+The prediction task is to classify whether a patient's cervical biopsy is positive
+(`Biopsy` = 1) from age, sexual and reproductive history, contraceptive use, smoking, and
+STD history. It supports risk-stratification ideas only and does not replace diagnostic
+testing.
+
+The notebook also explains the pipeline stages and conditional logic, documents the
+modifications that were made, and interprets the results of the modified pipeline.
+
+### Modifications
+
+1. **Data loading:** loads from a local file, then GitHub, then (Colab only) an upload prompt, and converts `?` to missing. The notebook runs with no manual upload, and the raw file marks missing answers with `?`.
+2. **Automatic cleaning:** fixes impossible values, drops columns that are too empty or constant, and drops duplicate rows. 
+3. **Class weights and cutoff:** balanced class weights, and a probability cutoff chosen to reach a target recall.
+4. **Random forest and PR AUC:** adds a random forest model and a PR AUC metric. 
+
+Also, the plot variables were changed to fit this dataset and the unseeded random sample was fixed so the output is the same on every run.
+
+## Repository Contents
+
+| File | Description |
+|---|---|
+| `Week3_AutomatedAnalysisPipelineNotebook.ipynb` | The completed Google Colab notebook (already run, with outputs) |
+| `risk_factors_cervical_cancer.csv` | The project dataset (original UCI format is CSV) |
+| `README.md` | This file |
+
+## Instructions for Running the Analysis
+
+Open the notebook with the link below, then choose **Runtime > Restart session and run all**.
+
+**Colab link:** https://colab.research.google.com/drive/1-Xt2PyUdwyESYsLgimoGmcETXUY7fjW- 
+
+No upload is needed. The first code cell loads the data in this order:
+1. `risk_factors_cervical_cancer.csv` from the current folder, if present.
+2. The same file from this GitHub repository (set by `DATA_URL` in the first code cell, which points to `katerina-smith/Programming_for_HDS_Week3b`).
+3. If both fail and the notebook is running in Colab, a prompt to upload the file.
+
+The notebook uses fixed random seeds (`random_state=42`), so results are the same on every run.
+
+## Required Software and Libraries
+
+Python 3 with: pandas, numpy, scipy, scikit-learn, matplotlib, seaborn, statsmodels, and phik
+(see `requirements.txt`). All except `phik` are pre-installed in Google Colab; the notebook
+installs `phik` automatically in the Phi-K correlation cell.
+
+## Dataset
+
+**Cervical Cancer (Risk Factors)**, UCI Machine Learning Repository:
+<https://archive.ics.uci.edu/dataset/383/cervical+cancer+risk+factors>
+(Hospital Universitario de Caracas, Venezuela, 2017; license CC BY 4.0).
+858 patients and 36 columns in the original file. After the automatic cleaning in the
+notebook: 835 patients and 32 columns (28 predictors after setting aside the target and
+three other screening-test columns).
+
+## Assumptions and Limitations
+
+- **Target and leakage:** the target is `Biopsy`. The columns `Hinselmann`, `Schiller`, and
+  `Citology` are other screening-test results that closely track the biopsy result, so they
+  are excluded from the predictors.
+- **Few positive cases:** about 6 percent of patients are biopsy positive. The test set has only 16
+  positive patients, so performance numbers are uncertain and would change with a different
+  split. The notebook uses a single train/test split.
+- **Missing data:** missing answers are imputed with training-set medians. They are not
+  random (patients could skip questions), so imputation cannot recover skipped answers.
+- **Statistical tests:** several tests were run without multiple-comparison adjustment, so
+  p-values are descriptive.
+- **Weak predictive signal:** models perform only modestly. A cutoff chosen to catch 80 percent of
+  positive biopsies flags most patients, so these models are not ready for clinical use.
+- **Single hospital, self-reported, observational data:** results may not generalize, and
+  relationships are associations, not causes.
+  
+  ## AI Use
+  
+ Anthropic. Claude. Used to improve documentation, give examples of optimal 
+analysis pipeline, troubleshoot/optimize code, and assist with model interpretation. 
+Also used to generate examples of README documentation in GitHub.
